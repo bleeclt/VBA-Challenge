@@ -1,0 +1,91 @@
+Attribute VB_Name = "Module1"
+Sub StockData()
+    
+    'Variable to hold ticker symbol
+    Dim Ticker As String
+    
+    'Variable to hold opening price
+    Dim StockOpen As Double
+    
+    'Variable to hold closing price
+    Dim StockClose As Double
+    
+    'Variable to hold Stock Price difference
+    Dim StockDif As Double
+    
+    'Variable to hold Stock Volume
+    Dim StockVolume As Double
+    
+    Dim VolumeTotal As Long
+    
+    'Variable to find last row in sheet
+    Dim lastRow As Long
+    
+    'Starting row for summary data output
+    Dim startRow As Integer
+    startRow = 2
+    
+    StockDif = StockClose - StockOpen
+    
+    lastRow = Cells(Rows.Count, 1).End(xlUp).Row
+    
+    'initialize value of stock open
+    StockOpen = Cells(2, 3).Value
+    
+    'initialize stock volume value
+    StockVolume = 0
+    
+    Cells(1, 9).Value = "Ticker"
+    Cells(1, 10).Value = "Yearly Change"
+    Cells(1, 11).Value = "Percent Change"
+    Cells(1, 12).Value = "Total Stock Volume"
+    
+    'loop through the list
+    For i = 2 To lastRow
+        
+        'get each ticker symbol and close price place it in new column
+        If (Cells(i + 1, 1).Value <> Cells(i, 1).Value) Then
+        
+            'Capture Close Price
+            StockClose = Cells(i, 6).Value
+            'Capture Ticker
+            Ticker = Cells(i, 1).Value
+            
+            'Display Ticker
+            Cells(startRow, 9).Value = Ticker
+            'Display Differential between the year
+            Cells(startRow, 10).Value = StockClose - StockOpen
+            
+                'Define Color for the cell
+                If Cells(startRow, 10).Value < 0 Then
+            
+                    Cells(startRow, 10).Interior.ColorIndex = 3
+                Else
+                    Cells(startRow, 10).Interior.ColorIndex = 4
+                End If
+                
+            'Display difference
+            Cells(startRow, 11).Value = Cells(startRow, 10).Value / StockOpen
+            'Display Stock Volume
+            Cells(startRow, 12).Value = StockVolume
+            
+            'increment next line to display
+            startRow = startRow + 1
+            
+            'initialize StockOpen variable for next group
+            StockOpen = Cells(i + 1, 3).Value
+            'initialize StockVolume variable for next group
+            StockVolume = 0
+            
+        Else
+            StockVolume = StockVolume + Cells(i, 7).Value
+            
+        End If
+        
+    Next i
+    
+
+
+
+
+End Sub
